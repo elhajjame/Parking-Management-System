@@ -17,15 +17,15 @@
       <div class="parent-card">
         <div class="card-one">
           <h5>Total Spots</h5>
-          <h2>30</h2>
+          <h2 id="total-spots">30</h2>
         </div>
         <div class="card-one">
-          <h5>Total Spots</h5>
-          <h2>30</h2>
+          <h5>Occupied</h5>
+          <h2 id="occupied">10</h2>
         </div>
         <div class="card-one">
-          <h5>Total Spots</h5>
-          <h2>30</h2>
+          <h5>Available</h5>
+          <h2 id="available">10</h2>
         </div>
         <div class="card-one">
           <h5>Total Spots</h5>
@@ -33,11 +33,11 @@
         </div>
       </div>
 
-      <div>
+      <section class="container-tt">
         <div class="form-card">
-          <h3>Add Vehicle</h3>
+          <h3 style="padding-bottom: 17px;">Add Vehicle</h3>
 
-          <input type="text" placeholder="Plate Number" />
+          <input class="input" type="text" placeholder="Plate Number" />
           <select>
             <option>Car</option>
             <option>Motorcycle</option>
@@ -46,7 +46,83 @@
 
           <button>Park Vehicle</button>
         </div>
+        <div class="info-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Plat</th>
+                <th>Type</th>
+                <th>Spot</th>
+                <th>Enter time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>123HHH</td>
+                <td>Car</td>
+                <td>#04</td>
+                <td>10:20</td>
+                <td><button class="show-btn">Show</button></td>
+              </tr>
+              <tr>
+                <td>123HHH</td>
+                <td>Car</td>
+                <td>#04</td>
+                <td>10:20</td>
+                <td><button class="show-btn">Show</button></td>
+              </tr>
+              <tr>
+                <td>123HHH</td>
+                <td>Car</td>
+                <td>#04</td>
+                <td>10:20</td>
+                <td><button class="show-btn">Show</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+    <div class="modal hidden">
+      <button class="close-modal">&times;</button>
+      <div class="parking-card">
+        <div class="card-header">
+          <h3>Parked Vehicle</h3>
+          <span class="status parked">PARKED</span>
+        </div>
+
+        <div class="card-body">
+          <div class="info">
+            <span>Plate Number</span>
+            <strong>AB-123-CD</strong>
+          </div>
+
+          <div class="info">
+            <span>spot</span>
+            <strong>#07</strong>
+          </div>
+
+          <div class="info">
+            <span>Entry Time</span>
+            <strong>09:30 AM</strong>
+          </div>
+
+          <div class="info" >
+            <span>Duration</span>
+            <strong>2h 15m</strong>
+          </div>
+        </div>
+        
+                  <div class="info" id="info-price">
+                    <span>Total Cost</span>
+                    <strong class="price">15.00 MAD</strong>
+                  </div>
+
+        <button class="pay-btn">Pay Now</button>
       </div>
     </div>
+    <div class="overlay hidden "></div>
+    <script src="script.js"></script>
   </body>
 </html>
