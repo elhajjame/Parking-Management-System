@@ -5,8 +5,9 @@ const showBtn = document.querySelectorAll('.show-btn');
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const close = document.querySelector('.close-modal');
-const palteNumber = document.querySelector('.input');
+const plateNumber = document.querySelector('.input');
 const addForm = document.querySelector('.form-card')
+const vehicleType = document.querySelector('.vehicle-type')
 
 
 
@@ -33,7 +34,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 function init() {
-    const TOTAL_SPOTS = 20;
+    const TOTAL_SPOTS = 10;
     totalSpots.textContent = TOTAL_SPOTS;
     if (!localStorage.getItem('parkingSpots')) {
         parkingSpots = [];
@@ -50,10 +51,42 @@ init()
 
 addForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const plate = palteNumber.value.trim();
+    const plate = plateNumber.value.trim();
+    const type = vehicleType.value;
 
     if (!plate) return alert('u should add plate number!');
 
     let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
     let parkingSpots = JSON.parse(localStorage.getItem('parkingSpots')) || [];
-})
+    console.log(parkedVehicles);
+    const exist = parkedVehicles.find(v => v.plateNumber === plate)
+    if (exist) {
+        return alert('This vehicle is already parked');
+    }
+
+    const freeSpot = parkingSpots.find(e => e.occupied == false);
+    if (!freeSpot) {
+        alert('the parking is full')
+    }
+    const now = new Date()
+    const vehicle = parkedVehicles.push({
+        plateNumber: plate,
+        type: type,
+        exitTime: null,
+        entryTime: now.getTime(),
+        enterTime: now.toLocaleTimeString(),
+        spotNumber: freeSpot.number
+    });
+
+    freeSpot.occupied = true;
+    localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
+
+    parkedVehicles.push(vehicle)
+
+    localStorage.setItem('parkedVehicles', JSON.stringify(parkedVehicles));
+    localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
+    plateNumber.value = "";
+    alert(`Vehicle ${plate} parked in slot ${freeSpot.number}`);
+    
+});
+
