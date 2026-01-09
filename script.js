@@ -9,7 +9,7 @@ const plateNumber = document.querySelector('.input');
 const addForm = document.querySelector('.form-card')
 const vehicleType = document.querySelector('.vehicle-type')
 
-
+const spot = document.querySelector('.spot')
 
 let parkingSpots = [];
 // ============= display and hide modal =============
@@ -34,6 +34,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 function init() {
+displaySpots()
     const TOTAL_SPOTS = 10;
     totalSpots.textContent = TOTAL_SPOTS;
     if (!localStorage.getItem('parkingSpots')) {
@@ -49,7 +50,7 @@ function init() {
 }
 init()
 
-addForm.addEventListener('submit', (e) => {
+addForm.addEventListener('subspotit', (e) => {
     e.preventDefault();
     const plate = plateNumber.value.trim();
     const type = vehicleType.value;
@@ -87,6 +88,20 @@ addForm.addEventListener('submit', (e) => {
     localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
     plateNumber.value = "";
     alert(`Vehicle ${plate} parked in slot ${freeSpot.number}`);
-    
+
+    displaySpots();
+
 });
 
+function displaySpots() {
+    let parkingSpots = JSON.parse(localStorage.getItem('parkingSpots')) || [];
+    const spotsCon = document.querySelector('#spots-con');
+    spotsCon.innerHTML = "";
+    parkingSpots.forEach(element => {
+        if (element.occupied == false) {
+            spotsCon.insertAdjacentHTML("beforeend", ` <div onclick="${openModal}" class="spot free" ><p>🅿️ ${element.number}</p></div>`)
+        } else {
+            spotsCon.insertAdjacentHTML("beforeend", ` <div onclick="${openModal}" class="spot occupied" ><p>🅿️ ${element.number}</p></div>`)
+        }
+    });
+}
