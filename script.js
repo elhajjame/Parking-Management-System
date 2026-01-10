@@ -175,25 +175,29 @@ spotsCon.addEventListener('click', function (e) {
         // plateNumberModal.textContent = getPlate.plateNumber
 
         if (getInfo) {
-
             plateNumberModal.textContent = getInfo.plateNumber
             entryTimeModal.textContent = getInfo.enterTime
             console.log(getInfo.enterTime);
             const now = new Date();
-            const totalTimeS = now.getTime()-getInfo.entryTime;
-            const totalTimeM = Math.floor(totalTimeS/6000);
-            const price = (0.08*totalTimeM).toFixed(2)
+            const totalTimeS = now.getTime() - getInfo.entryTime;
+            const totalTimeM = Math.floor(totalTimeS / 60000);
+            const price = (0.08 * totalTimeM).toFixed(2)
             console.log(price);
             priceModal.textContent = `${price} MAD`
 
-            const totalDuration = Math.floor(totalTimeM/60)
-            if(totalDuration == 0){
-            durationModal.textContent = `${totalTimeM} min `
-            }else
-            durationModal.textContent = `${totalDuration} H `
+            const totalDuration = Math.floor(totalTimeM / 60)
+            if (totalDuration == 0) {
+                durationModal.textContent = `${totalTimeM} min `
+            } else
+                durationModal.textContent = `${totalDuration} H `
+        } 
+    }else {
+            plateNumberModal.textContent = '-'
+            entryTimeModal.textContent = '-'
+            durationModal.textContent = '-'
+            priceModal.textContent = `0 MAD`
         }
-    }
-
+    openModal();
 });
 
 overlay.addEventListener('click', closeModal);
