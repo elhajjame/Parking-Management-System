@@ -153,8 +153,6 @@ const entryTimeModal = document.querySelector('.entry-time-modal');
 const priceModal = document.querySelector('.price-modal');
 const durationModal = document.querySelector('.duration');
 
-
-
 spotsCon.addEventListener('click', function (e) {
     console.log("button clicked");
     const btn = e.target.closest('.show-modal');
@@ -190,13 +188,13 @@ spotsCon.addEventListener('click', function (e) {
                 durationModal.textContent = `${totalTimeM} min `
             } else
                 durationModal.textContent = `${totalDuration} H `
-        } 
-    }else {
-            plateNumberModal.textContent = '-'
-            entryTimeModal.textContent = '-'
-            durationModal.textContent = '-'
-            priceModal.textContent = `0 MAD`
         }
+    } else {
+        plateNumberModal.textContent = '-'
+        entryTimeModal.textContent = '-'
+        durationModal.textContent = '-'
+        priceModal.textContent = `0 MAD`
+    }
     openModal();
 });
 
@@ -208,8 +206,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-
-
 // const ttttt = parkedVehicles.find(v=>v.spotNumber === 1);
 //         const getInfo = parkedVehicles.find(v=>v.number === number);
 //         // plateNumberModal.textContent = getPlate.plateNumber
@@ -218,3 +214,24 @@ document.addEventListener('keydown', (e) => {
 
 let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
 
+const payBtn = document.querySelector('.pay-btn');
+
+payBtn.addEventListener('click', () => {
+    let parkingSpots = JSON.parse(localStorage.getItem('parkingSpots')) || [];
+    // const getSpot = parkingSpots.find(element => element.occupied);
+
+    plateNumberModal.textContent = '-'
+    entryTimeModal.textContent = '-'
+    durationModal.textContent = '-'
+    priceModal.textContent = `0 MAD`
+    const getSpotNumber = parseInt(spotNumberModal.textContent.replace('#', ''));
+    const spot = parkingSpots.find(element => element.number == getSpotNumber);
+    if (spot) { spot.occupied = false }
+    console.log(spot);
+
+    localStorage.setItem('parkedVehicles', JSON.stringify(parkedVehicles));
+    localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
+
+    closeModal();
+    location.reload();
+});
