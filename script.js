@@ -57,18 +57,18 @@ addForm.addEventListener('submit', (e) => {
     const plate = plateNumber.value.trim();
     const type = vehicleType.value;
 
-    if (!plate) return alert('u should add plate number!');
+    if (!plate) return showError('u should add plate number!');
 
     let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
     let parkingSpots = JSON.parse(localStorage.getItem('parkingSpots')) || [];
     const exist = parkedVehicles.find(v => v.plateNumber === plate);
     if (exist) {
-        return alert('This vehicle is already parked');
+        return showError('This vehicle is already parked');
     }
 
     const freeSpot = parkingSpots.find(e => e.occupied == false);
     if (!freeSpot) {
-        alert('the parking is full')
+        showError('the parking is full')
     }
 
     let spotNumber = 0;
@@ -91,7 +91,7 @@ addForm.addEventListener('submit', (e) => {
     localStorage.setItem('parkedVehicles', JSON.stringify(parkedVehicles));
     localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
     plateNumber.value = "";
-    alert(`Vehicle ${plate} parked in slot ${freeSpot.number}`);
+    showError(`Vehicle ${plate} parked in slot ${freeSpot.number}`);
 
     displaySpots();
     // console.log(parkedVehicles);
@@ -168,18 +168,17 @@ spotsCon.addEventListener('click', function (e) {
     if (isOccupied == "true") {
         let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
         const getInfo = parkedVehicles.find(v => v.spotNumber === spotNumber);
-        // plateNumberModal.textContent = getPlate.plateNumber
 
         if (getInfo) {
-            plateNumberModal.textContent = getInfo.plateNumber
-            entryTimeModal.textContent = getInfo.enterTime
-            typemodal.textContent = getInfo.type
-            // console.log(getInfo.enterTime);
+            plateNumberModal.textContent = getInfo.plateNumber;
+            entryTimeModal.textContent = getInfo.enterTime;
+            typemodal.textContent = getInfo.type;
+
             const now = new Date();
             const totalTimeS = now.getTime() - getInfo.entryTime;
             const totalTimeM = Math.floor(totalTimeS / 60000);
             const price = (0.08 * totalTimeM).toFixed(2);
-            // console.log(price);
+
             priceModal.textContent = `${price} MAD`;
 
             const totalDuration = Math.floor(totalTimeM / 60);
@@ -205,12 +204,6 @@ document.addEventListener('keydown', (e) => {
         closeModal();
     }
 });
-
-// const ttttt = parkedVehicles.find(v=>v.spotNumber === 1);
-//         const getInfo = parkedVehicles.find(v=>v.number === number);
-//         // plateNumberModal.textContent = getPlate.plateNumber
-
-//      console.log(getInfo)
 
 let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
 
@@ -248,21 +241,18 @@ payBtn.addEventListener('click', () => {
 
 function history() {
     const history = JSON.parse(localStorage.getItem('sethistory')) || []
-    console.log(history);
-    console.log(history.exitTime);
-    let parkingSpots = JSON.parse(localStorage.getItem('parkingSpots')) || [];
     const historyCon = document.querySelector("#tbody-history")
-    // let nullTme = parkedVehicles.find(element => element.exitTime = null );
+
     historyCon.innerHTML = "";
-if (history.length === 0) {
-    historyCon.innerHTML = `
+    if (history.length === 0) {
+        historyCon.innerHTML = `
         <tr>
             <td colspan="5" id="test">
                 Aucun retard enregistré
             </td>
         </tr>
     `;
-}
+    }
 
     else {
         history.forEach(element => {
@@ -281,5 +271,12 @@ if (history.length === 0) {
         });
     }
 
+}
+
+function showError(message) {
+    const errorEl = document.querySelector('.error-card');
+    errorEl.innerHTML = message;
+    errorEl.classList.add('show');
+    setTimeout(()=>{errorEl.classList.remove('show')}, 3000)
 }
 history();

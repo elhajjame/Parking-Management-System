@@ -404,15 +404,22 @@ button:hover {
 }
 
 .error-card {
-  background: #ffffff;
+  display: none;
+
   padding: 8px 8px;
   border-radius: 16px;
   text-align: center;
   width: 320px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+ 
   animation: fadeIn 0.4s ease-in-out;
   height: 40px;
+  color: white;
+
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(50px);
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.45));
 }
-.error-card p{
-  color: black;
+
+.show {
+    display: block;
 }
