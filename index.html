@@ -8,6 +8,11 @@
   </head>
 
   <body>
+          <div class="error-container">
+              <div class="error-card">
+                <p>Something went wrong. Please try again later.</p>
+              </div>
+            </div>
     <div class="header">
       <div class="test">
         <h2 class="h2card">Smart Parking</h2>
@@ -47,6 +52,8 @@
             </select>
 
             <button>Park Vehicle</button>
+
+      
           </form>
           <div class="info-card">
             <!-- <h3>Parking Spots</h3> -->
@@ -62,7 +69,7 @@
             </div>
           </div>
         </div>
-        <div class="info-card second">
+        <div id="history" class="info-card second">
           <table>
             <thead>
               <tr>
@@ -70,31 +77,35 @@
                 <th>Type</th>
                 <th>Spot</th>
                 <th>Enter time</th>
-                <th>Action</th>
+                <th>Exit Time</th>
+                <th>price</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="tbody-history">
               <tr>
                 <td>123HHH</td>
                 <td>Car</td>
                 <td>#02</td>
                 <td>10:20</td>
-                <td><button class="show-btn">Show</button></td>
+                <td>01:03</td>
+                <th>20 MAD</th>
+              </tr>
+              <!-- <tr>
+                <td>123HHH</td>
+                <td>Car</td>
+                <td>#02</td>
+                <td>10:20</td>
+                <td>01:03</td>
+                <th>20 MAD</th>
               </tr>
               <tr>
                 <td>123HHH</td>
                 <td>Car</td>
-                <td>#03</td>
+                <td>#02</td>
                 <td>10:20</td>
-                <td><button class="show-btn">Show</button></td>
-              </tr>
-              <tr>
-                <td>123HHH</td>
-                <td>Car</td>
-                <td>#04</td>
-                <td>10:20</td>
-                <td><button class="show-btn">Show</button></td>
-              </tr>
+                <td>01:03</td>
+                <th>20 MAD</th>
+              </tr> -->
             </tbody>
           </table>
         </div>
@@ -116,11 +127,6 @@
           </div>
 
           <div class="info">
-            <span>spot</span>
-            <strong class="spot-number">#07</strong>
-          </div>
-
-          <div class="info">
             <span>Entry Time</span>
             <strong class="entry-time-modal">09:30 AM</strong>
           </div>
@@ -128,6 +134,14 @@
           <div class="info">
             <span>Duration</span>
             <strong class="duration">2h 15m</strong>
+          </div>
+          <div class="info">
+            <span>spot</span>
+            <strong class="spot-number">#1</strong>
+          </div>
+          <div class="info">
+            <span>type</span>
+            <strong class="type">#1</strong>
           </div>
         </div>
 

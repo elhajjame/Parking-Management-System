@@ -48,16 +48,15 @@ function init() {
         }
         localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
     } else parkingSpots = JSON.parse(localStorage.getItem('parkingSpots'));
-    displaySpots()
+    displaySpots();
 }
 init();
-
+const type = vehicleType.value;
 addForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const plate = plateNumber.value.trim();
     const type = vehicleType.value;
-    // console.log(plate);
-    // console.log(type);
+
     if (!plate) return alert('u should add plate number!');
 
     let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
@@ -152,20 +151,19 @@ const spotNumberModal = document.querySelector('.spot-number');
 const entryTimeModal = document.querySelector('.entry-time-modal');
 const priceModal = document.querySelector('.price-modal');
 const durationModal = document.querySelector('.duration');
+const typemodal = document.querySelector('.type');
 
 spotsCon.addEventListener('click', function (e) {
-    console.log("button clicked");
     const btn = e.target.closest('.show-modal');
     if (!btn) return;
 
     const spotNumber = parseInt(btn.dataset.number);
     const isOccupied = btn.dataset.occupied;
     console.log(spotNumber);
-    console.log(isOccupied);
     openModal();
 
-    spotNumberModal.textContent = `#${spotNumber}`
-    const costPerHour = 5;
+    spotNumberModal.textContent = `#${spotNumber}`;
+
 
     if (isOccupied == "true") {
         let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
@@ -175,25 +173,27 @@ spotsCon.addEventListener('click', function (e) {
         if (getInfo) {
             plateNumberModal.textContent = getInfo.plateNumber
             entryTimeModal.textContent = getInfo.enterTime
-            console.log(getInfo.enterTime);
+            typemodal.textContent = getInfo.type
+            // console.log(getInfo.enterTime);
             const now = new Date();
             const totalTimeS = now.getTime() - getInfo.entryTime;
             const totalTimeM = Math.floor(totalTimeS / 60000);
-            const price = (0.08 * totalTimeM).toFixed(2)
-            console.log(price);
-            priceModal.textContent = `${price} MAD`
+            const price = (0.08 * totalTimeM).toFixed(2);
+            // console.log(price);
+            priceModal.textContent = `${price} MAD`;
 
-            const totalDuration = Math.floor(totalTimeM / 60)
+            const totalDuration = Math.floor(totalTimeM / 60);
             if (totalDuration == 0) {
-                durationModal.textContent = `${totalTimeM} min `
+                durationModal.textContent = `${totalTimeM} min `;
             } else
-                durationModal.textContent = `${totalDuration} H `
+                durationModal.textContent = `${totalDuration} H `;
         }
     } else {
-        plateNumberModal.textContent = '-'
-        entryTimeModal.textContent = '-'
-        durationModal.textContent = '-'
-        priceModal.textContent = `0 MAD`
+        plateNumberModal.textContent = '-';
+        entryTimeModal.textContent = '-';
+        durationModal.textContent = '-';
+        typemodal.textContent = '-';
+        priceModal.textContent = `0 MAD`;
     }
     openModal();
 });
@@ -217,8 +217,19 @@ let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
 const payBtn = document.querySelector('.pay-btn');
 
 payBtn.addEventListener('click', () => {
+
+    const history = JSON.parse(localStorage.getItem('sethistory')) || []
+    const historyItem = history.push({
+        plateNumber: plateNumberModal.textContent,
+        type: typemodal.textContent,
+        entryTime: entryTimeModal.textContent,
+        price: priceModal.textContent,
+        exitTime: new Date().toLocaleTimeString(),
+        spotNumber: spotNumberModal.textContent,
+    });
+    localStorage.setItem('sethistory', JSON.stringify(history));
     let parkingSpots = JSON.parse(localStorage.getItem('parkingSpots')) || [];
-    // const getSpot = parkingSpots.find(element => element.occupied);
+
 
     plateNumberModal.textContent = '-'
     entryTimeModal.textContent = '-'
@@ -227,7 +238,6 @@ payBtn.addEventListener('click', () => {
     const getSpotNumber = parseInt(spotNumberModal.textContent.replace('#', ''));
     const spot = parkingSpots.find(element => element.number == getSpotNumber);
     if (spot) { spot.occupied = false }
-    console.log(spot);
 
     localStorage.setItem('parkedVehicles', JSON.stringify(parkedVehicles));
     localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
@@ -235,3 +245,41 @@ payBtn.addEventListener('click', () => {
     closeModal();
     location.reload();
 });
+
+function history() {
+    const history = JSON.parse(localStorage.getItem('sethistory')) || []
+    console.log(history);
+    console.log(history.exitTime);
+    let parkingSpots = JSON.parse(localStorage.getItem('parkingSpots')) || [];
+    const historyCon = document.querySelector("#tbody-history")
+    // let nullTme = parkedVehicles.find(element => element.exitTime = null );
+    historyCon.innerHTML = "";
+if (history.length === 0) {
+    historyCon.innerHTML = `
+        <tr>
+            <td colspan="5" id="test">
+                Aucun retard enregistré
+            </td>
+        </tr>
+    `;
+}
+
+    else {
+        history.forEach(element => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+         <tr>
+                <td>${element.plateNumber}</td>
+                <td>${element.type}</td>
+                <td>${element.entryTime}</td>
+                <td>${element.entryTime}</td>
+                <td>${element.exitTime}</td>
+                <td>${element.price}</td>
+              </tr>
+        `
+            historyCon.appendChild(tr)
+        });
+    }
+
+}
+history();

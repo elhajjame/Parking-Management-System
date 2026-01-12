@@ -383,3 +383,36 @@ button:hover {
 .spot:hover {
   transform: scale(1.05);
 }
+#test {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  padding-left: 145px;
+}
+
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  z-index: 10;
+  transform: translatex(-50%);
+}
+
+.error-card {
+  background: #ffffff;
+  padding: 8px 8px;
+  border-radius: 16px;
+  text-align: center;
+  width: 320px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  animation: fadeIn 0.4s ease-in-out;
+  height: 40px;
+}
+.error-card p{
+  color: black;
+}
