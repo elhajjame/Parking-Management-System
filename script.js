@@ -49,6 +49,11 @@ function init() {
         localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
     } else parkingSpots = JSON.parse(localStorage.getItem('parkingSpots'));
     displaySpots();
+    // console.log(parkingSpots);
+
+    // const calculate = parkingSpots.find(element => element.occupied === true);
+    // console.log(calculate);
+
 }
 init();
 const type = vehicleType.value;
@@ -153,6 +158,14 @@ const priceModal = document.querySelector('.price-modal');
 const durationModal = document.querySelector('.duration');
 const typemodal = document.querySelector('.type');
 
+const parkbtn = document.querySelector('.parkBtn');
+
+parkbtn.addEventListener('click',()=>{
+    parkingInfo();
+    location.reload();
+
+});
+
 spotsCon.addEventListener('click', function (e) {
     const btn = e.target.closest('.show-modal');
     if (!btn) return;
@@ -195,6 +208,7 @@ spotsCon.addEventListener('click', function (e) {
         priceModal.textContent = `0 MAD`;
     }
     openModal();
+    parkingInfo();
 });
 
 overlay.addEventListener('click', closeModal);
@@ -207,14 +221,23 @@ document.addEventListener('keydown', (e) => {
 
 let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
 
+
 const payBtn = document.querySelector('.pay-btn');
 
 payBtn.addEventListener('click', () => {
 
+    const hasCar = parkedVehicles.some(v => v.plateNumber);
+    console.log(hasCar);
+    if (!hasCar) {
+        showError('No car added');
+        return;
+    }
+    // ================== sava data in history (local storage) ==================
     const history = JSON.parse(localStorage.getItem('sethistory')) || []
     const historyItem = history.push({
         plateNumber: plateNumberModal.textContent,
         type: typemodal.textContent,
+        spot: spotNumberModal.textContent,
         entryTime: entryTimeModal.textContent,
         price: priceModal.textContent,
         exitTime: new Date().toLocaleTimeString(),
@@ -236,6 +259,7 @@ payBtn.addEventListener('click', () => {
     localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
 
     closeModal();
+    parkingInfo();
     location.reload();
 });
 
@@ -248,20 +272,20 @@ function history() {
         historyCon.innerHTML = `
         <tr>
             <td colspan="5" id="test">
-                Aucun retard enregistré
+                no history at the moment
             </td>
         </tr>
     `;
     }
 
     else {
-        history.forEach(element => {
+        history.slice(-4).forEach(element => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
          <tr>
                 <td>${element.plateNumber}</td>
                 <td>${element.type}</td>
-                <td>${element.entryTime}</td>
+                <td>${element.spot}</td>
                 <td>${element.entryTime}</td>
                 <td>${element.exitTime}</td>
                 <td>${element.price}</td>
@@ -277,6 +301,28 @@ function showError(message) {
     const errorEl = document.querySelector('.error-card');
     errorEl.innerHTML = message;
     errorEl.classList.add('show');
-    setTimeout(()=>{errorEl.classList.remove('show')}, 3000)
+    setTimeout(() => { errorEl.classList.remove('show') }, 3000)
 }
 history();
+
+function parkingInfo() {
+    let totall = 0;
+    let t = 0;
+    for (let i = 0; i < parkingSpots.length; i++) {
+        if (parkingSpots[i].occupied === true) {
+            totall++;
+        } else {
+            if (parkingSpots[i].occupied === false) {
+                t++;
+            }
+        }
+    }
+    document.querySelector('#occupied').textContent = totall;
+    document.querySelector('#qqqqq').textContent = t;
+    // window.location.reload();
+    // location.reload();
+    console.log('available',t);
+    console.log('occ',totall);
+    // console.log(parkingSpots);
+}
+parkingInfo();
