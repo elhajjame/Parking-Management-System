@@ -1,6 +1,4 @@
 const totalSpots = document.querySelector('#total-spots');
-const available = document.querySelector('#available');
-// const occupied = document.querySelector('#occupied');
 const showBtn = document.querySelectorAll('.show-btn');
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
@@ -12,7 +10,6 @@ const vehicleType = document.querySelector('.vehicle-type')
 
 const spot = document.querySelector('.spot')
 
-let parkingSpots = [];
 // ============= display and hide modal =============
 const openMoodal = function () {
     console.log('show btn');
@@ -73,13 +70,13 @@ addForm.addEventListener('submit', (e) => {
 
     const freeSpot = parkingSpots.find(e => e.occupied == false);
     if (!freeSpot) {
-        showError('the parking is full')
+        showError('the parking is full');
+        return;
     }
 
-    let spotNumber = 0;
-    const now = new Date()
-    const vehicle = parkedVehicles.push({
-        spotNumber: spotNumber++,
+    const now = new Date();
+    parkedVehicles.push({
+        // spotNumber: spotNumber++,
         plateNumber: plate,
         type: type,
         exitTime: null,
@@ -91,7 +88,6 @@ addForm.addEventListener('submit', (e) => {
     freeSpot.occupied = true;
     localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
 
-    parkedVehicles.push(vehicle)
 
     localStorage.setItem('parkedVehicles', JSON.stringify(parkedVehicles));
     localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
@@ -99,8 +95,7 @@ addForm.addEventListener('submit', (e) => {
     showError(`Vehicle ${plate} parked in slot ${freeSpot.number}`);
 
     displaySpots();
-    // console.log(parkedVehicles);
-
+    parkingInfo();
 });
 
 
@@ -160,9 +155,9 @@ const typemodal = document.querySelector('.type');
 
 const parkbtn = document.querySelector('.parkBtn');
 
-parkbtn.addEventListener('click',()=>{
+parkbtn.addEventListener('click', () => {
     parkingInfo();
-    location.reload();
+    displaySpots();
 
 });
 
@@ -173,10 +168,8 @@ spotsCon.addEventListener('click', function (e) {
     const spotNumber = parseInt(btn.dataset.number);
     const isOccupied = btn.dataset.occupied;
     console.log(spotNumber);
-    openModal();
 
     spotNumberModal.textContent = `#${spotNumber}`;
-
 
     if (isOccupied == "true") {
         let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
@@ -219,22 +212,25 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
-
-
 const payBtn = document.querySelector('.pay-btn');
 
 payBtn.addEventListener('click', () => {
+    let parkedVehicles = JSON.parse(localStorage.getItem('parkedVehicles')) || [];
 
-    const hasCar = parkedVehicles.some(v => v.plateNumber);
-    console.log(hasCar);
-    if (!hasCar) {
-        showError('No car added');
+    if (parkedVehicles.length === 0) {
+        showError('Parking is empty');
         return;
     }
-    // ================== sava data in history (local storage) ==================
-    const history = JSON.parse(localStorage.getItem('sethistory')) || []
-    const historyItem = history.push({
+    if (plateNumberModal.textContent === '-') {
+        showError('No car selected');
+        return;
+    }
+
+    //===================== Save data in history =====================
+    const history = JSON.parse(localStorage.getItem('sethistory')) || [];
+    const getSpotNumber = parseInt(spotNumberModal.textContent.replace('#', ''));
+
+    history.push({
         plateNumber: plateNumberModal.textContent,
         type: typemodal.textContent,
         spot: spotNumberModal.textContent,
@@ -244,58 +240,59 @@ payBtn.addEventListener('click', () => {
         spotNumber: spotNumberModal.textContent,
     });
     localStorage.setItem('sethistory', JSON.stringify(history));
+
+    // ============= assing Free the spot ===============
     let parkingSpots = JSON.parse(localStorage.getItem('parkingSpots')) || [];
+    const spot = parkingSpots.find(element => element.number === getSpotNumber);
+    if (spot) spot.occupied = false;
 
-
-    plateNumberModal.textContent = '-'
-    entryTimeModal.textContent = '-'
-    durationModal.textContent = '-'
-    priceModal.textContent = `0 MAD`
-    const getSpotNumber = parseInt(spotNumberModal.textContent.replace('#', ''));
-    const spot = parkingSpots.find(element => element.number == getSpotNumber);
-    if (spot) { spot.occupied = false }
+    //====================== delete vehicle from localstorage======================
+    parkedVehicles = parkedVehicles.filter(v => v.spotNumber !== getSpotNumber);
 
     localStorage.setItem('parkedVehicles', JSON.stringify(parkedVehicles));
     localStorage.setItem('parkingSpots', JSON.stringify(parkingSpots));
 
-    closeModal();
+    spotNumberModal.textContent = '-';
+    plateNumberModal.textContent = '-';
+    entryTimeModal.textContent = '-';
+    durationModal.textContent = '-';
+    typemodal.textContent = '-';
+    priceModal.textContent = '0 MAD';
+
+    displaySpots();
     parkingInfo();
-    location.reload();
+    renderHistory();
+    closeModal();
 });
 
-function history() {
-    const history = JSON.parse(localStorage.getItem('sethistory')) || []
-    const historyCon = document.querySelector("#tbody-history")
+function renderHistory() {
+    const history = JSON.parse(localStorage.getItem('sethistory')) || [];
+    const historyCon = document.querySelector("#tbody-history");
 
     historyCon.innerHTML = "";
+
     if (history.length === 0) {
         historyCon.innerHTML = `
-        <tr>
-            <td colspan="5" id="test">
-                no history at the moment
-            </td>
-        </tr>
-    `;
-    }
-
-    else {
+            <tr>
+                <td colspan="6" id="test">No history at the moment</td>
+            </tr>
+        `;
+    } else {
         history.slice(-4).forEach(element => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-         <tr>
                 <td>${element.plateNumber}</td>
                 <td>${element.type}</td>
                 <td>${element.spot}</td>
                 <td>${element.entryTime}</td>
                 <td>${element.exitTime}</td>
                 <td>${element.price}</td>
-              </tr>
-        `
-            historyCon.appendChild(tr)
+            `;
+            historyCon.appendChild(tr);
         });
     }
-
 }
+
 
 function showError(message) {
     const errorEl = document.querySelector('.error-card');
@@ -303,26 +300,18 @@ function showError(message) {
     errorEl.classList.add('show');
     setTimeout(() => { errorEl.classList.remove('show') }, 3000)
 }
-history();
+renderHistory();
 
 function parkingInfo() {
-    let totall = 0;
-    let t = 0;
+    const parkingSpots = JSON.parse(localStorage.getItem('parkingSpots')) || [];
+    let occupied = 0
+    let available = 0
     for (let i = 0; i < parkingSpots.length; i++) {
         if (parkingSpots[i].occupied === true) {
-            totall++;
-        } else {
-            if (parkingSpots[i].occupied === false) {
-                t++;
-            }
-        }
+            occupied++;
+        } else available++;
     }
-    document.querySelector('#occupied').textContent = totall;
-    document.querySelector('#qqqqq').textContent = t;
-    // window.location.reload();
-    // location.reload();
-    console.log('available',t);
-    console.log('occ',totall);
-    // console.log(parkingSpots);
+    document.querySelector('#occupied').textContent = occupied;
+    document.querySelector('#available').textContent = available;
 }
 parkingInfo();

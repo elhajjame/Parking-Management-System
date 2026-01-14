@@ -389,7 +389,6 @@ button:hover {
   font-size: 16px;
   font-weight: 700;
   color: #fff;
-  padding-left: 145px;
 }
 
 .error-container {
@@ -407,7 +406,7 @@ button:hover {
   display: none;
 
   padding: 8px 8px;
-  border-radius: 16px;
+  border-radius: 7px;
   text-align: center;
   width: 320px;
  
@@ -417,7 +416,8 @@ button:hover {
 
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(50px);
-    background: linear-gradient(to top, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.45));
+    /* background: linear-gradient(to top, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.45)); */
+    background-color: #6366f1;
 }
 
 .show {
